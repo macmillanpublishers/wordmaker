@@ -38,7 +38,7 @@ ensure
   puts logstring
 end
 
-def convertHMTLToDocxPSscript(psscript, filetype, file, htmlfile, docxfile)
+def convertHMTLToDocxPSscript(psscript, filetype, file, docxfile)
   if filetype == "html"
     `PowerShell -NoProfile -ExecutionPolicy Bypass -Command "#{psscript} '#{file}' '#{docxfile}'"`
   else
