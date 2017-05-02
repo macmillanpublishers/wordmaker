@@ -16,7 +16,7 @@ os = "windows"
 resource_dir = "C:"
 htmlconversionsjs = File.join(scriptsdir, "HTMLconversions.js")
 savehtmlasdocxps = File.join(scriptsdir, "saveHTMLasDOCX.ps1")
-transformxmlpy = File.join(scriptsdir, "transformXML.py")
+transformxmlpy = File.join(scriptsdir, "unzipDOCX.py")
 
 # ---------------------- METHODS
 
