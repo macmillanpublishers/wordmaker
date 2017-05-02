@@ -97,5 +97,5 @@ localRunNode(htmlconversionsjs, final_file, os, resource_dir)
 # convert .html to .docx via powershell script
 convertHMTLToDocxPSscript(savehtmlasdocxps, filetype, final_file, outputfile)
 
-# process converted docx
-# runpython(transformxmlpy, resource_dir, "")
+# unzip converted docx
+runpython(transformxmlpy, outputfile, final_dir)
