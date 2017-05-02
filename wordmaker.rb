@@ -64,20 +64,18 @@ ensure
 end
 
 def runpython(py_script, dir, os, args)
-  if filetype == "html"
-    if os == "mac" or os == "unix"
-      `python #{py_script} #{args}`
-    elsif os == "windows"
-      pythonpath = File.join(dir, "Python27", "python.exe")
-      `#{pythonpath} #{py_script} #{args}`
-    else
-      File.open(Bkmkr::Paths.log_file, 'a+') do |f|
-        f.puts "----- PYTHON ERROR"
-        f.puts "ERROR: I can't seem to run python. Is it installed and part of your system PATH?"
-        f.puts "ABORTING. All following processes will fail."
-      end
-      File.delete(Project.alert)
+  if os == "mac" or os == "unix"
+    `python #{py_script} #{args}`
+  elsif os == "windows"
+    pythonpath = File.join(dir, "Python27", "python.exe")
+    `#{pythonpath} #{py_script} #{args}`
+  else
+    File.open(Bkmkr::Paths.log_file, 'a+') do |f|
+      f.puts "----- PYTHON ERROR"
+      f.puts "ERROR: I can't seem to run python. Is it installed and part of your system PATH?"
+      f.puts "ABORTING. All following processes will fail."
     end
+    File.delete(Project.alert)
   end
 end
 
