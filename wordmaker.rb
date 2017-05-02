@@ -63,7 +63,7 @@ ensure
   puts logstring
 end
 
-def runpython(py_script, dir, args)
+def runpython(py_script, dir, os, args)
   if filetype == "html"
     if os == "mac" or os == "unix"
       `python #{py_script} #{args}`
@@ -98,4 +98,4 @@ localRunNode(htmlconversionsjs, final_file, os, resource_dir)
 convertHMTLToDocxPSscript(savehtmlasdocxps, filetype, final_file, outputfile)
 
 # unzip converted docx
-runpython(transformxmlpy, outputfile, final_dir)
+runpython(transformxmlpy, resource_dir, os, "#{outputfile} #{final_dir}")
