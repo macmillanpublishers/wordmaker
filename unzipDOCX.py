@@ -1,6 +1,9 @@
 from sys import argv
 
-script, filename, finaldir = argv
+filename = argv[1]
+finaldir = argv[2]
+print filename
+print finaldir
 
 import os
 import zipfile
