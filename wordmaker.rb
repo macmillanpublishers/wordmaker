@@ -51,10 +51,10 @@ end
 
 def localRunNode(jsfile, args, os, resource_dir)
   if os == "mac" or os == "unix"
-    `node #{js} #{args}`
+    `node #{jsfile} #{args}`
   elsif os == "windows"
     nodepath = File.join(resource_dir, "nodejs", "node.exe")
-    `#{nodepath} #{js} #{args}`
+    `#{nodepath} #{jsfile} #{args}`
   else
     puts "Can't run node!"
   end
