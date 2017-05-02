@@ -7,7 +7,7 @@ inputfile = inputfile.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR]
 filename_split = inputfile.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR].compact)).pop
 filename = inputfile.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR].compact)).pop.rpartition('.').first.gsub(/ /, "")
 working_dir = inputfile.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR].compact))[0...-1].join(File::SEPARATOR)
-final_dir = File.join(working_dir, filename)
+final_dir = File.join(working_dir, "done", filename)
 final_file = File.join(final_dir, filename_split)
 filetype = inputfile.split(".").pop
 outputfile = File.join(final_dir, "output.docx")
@@ -57,7 +57,6 @@ def localRunNode(jsfile, args, os, resource_dir)
     `#{nodepath} #{js} #{args}`
   else
     puts "Can't run node!"
-    end
   end
 rescue => logstring
 ensure
