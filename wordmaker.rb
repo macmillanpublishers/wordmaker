@@ -5,10 +5,12 @@ inputfile = inputfile.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR]
 working_dir = inputfile.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR].compact))[0...-2].join(File::SEPARATOR)
 filetype = inputfile.split(".").pop
 outputfile = File.join(working_dir, "output", "output.docx")
+scriptsdir = File.join("S:", "resources", "bookmaker_scripts", "wordmaker")
 os = "windows"
 resource_dir = "C:"
-savehtmlasdocxps = ""
-transformxmlpy = ""
+htmlconversionsjs = File.join(scriptsdir, "HTMLconversions.js")
+savehtmlasdocxps = File.join(scriptsdir, "saveHTMLasDOCX.ps1")
+transformxmlpy = File.join(scriptsdir, "transformXML.py")
 
 # ---------------------- METHODS
 
@@ -17,6 +19,25 @@ def convertHMTLToDocxPSscript(psscript, filetype, htmlfile, docxfile)
     `PowerShell -NoProfile -ExecutionPolicy Bypass -Command "#{psscript} '#{inputfile}' '#{docxfile}'"`
   else
     logstring = 'input file is not html, skipping'
+  end
+rescue => logstring
+ensure
+  puts logstring
+end
+
+def localRunNode(jsfile, args)
+  if os == "mac" or os == "unix"
+    `node #{js} #{args}`
+  elsif os == "windows"
+    nodepath = File.join(resource_dir, "nodejs", "node.exe")
+    `#{nodepath} #{js} #{args}`
+  else
+    File.open(Bkmkr::Paths.log_file, 'a+') do |f|
+      f.puts "----- NODE ERROR"
+      f.puts "ERROR: I can't seem to run node. Is it installed and part of your system PATH?"
+      f.puts "ABORTING. All following processes will fail."
+    end
+    File.delete(Project.alert)
   end
 rescue => logstring
 ensure
@@ -43,7 +64,11 @@ end
 
 # ---------------------- PROCESSES
 
-#convert .doc to .docx via powershell script, ignore html files
+# prep the html file for conversion
+localRunNode(htmlconversionsjs, inputfile)
+
+# convert .html to .docx via powershell script
 convertHMTLToDocxPSscript(savehtmlasdocxps, filetype, inputfile, outputfile)
 
-runpython(transformxmlpy, resource_dir, "")
+# process converted docx
+# runpython(transformxmlpy, resource_dir, "")

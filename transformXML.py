@@ -73,6 +73,8 @@ def convert_footnotes(self):
     # grab and parse each footnote object
     # create new object and remap to required footnote formatting
     # add to footnote.xml file
+    tree = ET.parse('document.xml')
+    root = tree.getroot()
 
     return
 
