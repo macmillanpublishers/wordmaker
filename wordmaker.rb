@@ -4,7 +4,7 @@ require_relative '../bookmaker/core/utilities/mcmlln-tools.rb'
 unescapeargv = ARGV[0].chomp('"').reverse.chomp('"').reverse
 inputfile = File.expand_path(unescapeargv)
 inputfile = inputfile.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR].compact)).join(File::SEPARATOR)
-filename_split = input_file.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR].compact)).pop
+filename_split = inputfile.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR].compact)).pop
 filename = inputfile.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR].compact)).pop.rpartition('.').first.gsub(/ /, "")
 working_dir = inputfile.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR].compact))[0...-2].join(File::SEPARATOR)
 final_dir = File.join(working_dir, filename)
