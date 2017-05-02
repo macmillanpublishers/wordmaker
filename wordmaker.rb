@@ -38,9 +38,9 @@ ensure
   puts logstring
 end
 
-def convertHMTLToDocxPSscript(psscript, filetype, htmlfile, docxfile)
+def convertHMTLToDocxPSscript(psscript, filetype, file, htmlfile, docxfile)
   if filetype == "html"
-    `PowerShell -NoProfile -ExecutionPolicy Bypass -Command "#{psscript} '#{inputfile}' '#{docxfile}'"`
+    `PowerShell -NoProfile -ExecutionPolicy Bypass -Command "#{psscript} '#{file}' '#{docxfile}'"`
   else
     logstring = 'input file is not html, skipping'
   end
