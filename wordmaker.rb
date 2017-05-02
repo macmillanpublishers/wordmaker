@@ -1,10 +1,16 @@
+require_relative '../bookmaker/core/utilities/mcmlln-tools.rb'
+
 # ---------------------- VARIABLES
 unescapeargv = ARGV[0].chomp('"').reverse.chomp('"').reverse
 inputfile = File.expand_path(unescapeargv)
 inputfile = inputfile.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR].compact)).join(File::SEPARATOR)
+filename_split = input_file.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR].compact)).pop
+filename = inputfile.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR].compact)).pop.rpartition('.').first.gsub(/ /, "")
 working_dir = inputfile.split(Regexp.union(*[File::SEPARATOR, File::ALT_SEPARATOR].compact))[0...-2].join(File::SEPARATOR)
+final_dir = File.join(working_dir, filename)
+final_file = File.join(final_dir, filename_split)
 filetype = inputfile.split(".").pop
-outputfile = File.join(working_dir, "output", "output.docx")
+outputfile = File.join(final_dir, "output.docx")
 scriptsdir = File.join("S:", "resources", "bookmaker_scripts", "wordmaker")
 os = "windows"
 resource_dir = "C:"
@@ -13,6 +19,24 @@ savehtmlasdocxps = File.join(scriptsdir, "saveHTMLasDOCX.ps1")
 transformxmlpy = File.join(scriptsdir, "transformXML.py")
 
 # ---------------------- METHODS
+
+def makeDir(path)
+  unless Dir.exist?(path)
+    Mcmlln::Tools.makeDir(path)
+  else
+    logstring = 'n-a'
+  end
+rescue => logstring
+ensure
+  puts logstring
+end
+
+def moveFile(file, dest)
+  Mcmlln::Tools.moveFile(file, dest)
+rescue => logstring
+ensure
+  puts logstring
+end
 
 def convertHMTLToDocxPSscript(psscript, filetype, htmlfile, docxfile)
   if filetype == "html"
@@ -64,11 +88,17 @@ end
 
 # ---------------------- PROCESSES
 
+# create the folder for doing everything
+makeDir(final_dir)
+
+# move input file to final dir
+moveFile(inputfile, final_dir)
+
 # prep the html file for conversion
-localRunNode(htmlconversionsjs, inputfile)
+localRunNode(htmlconversionsjs, final_file)
 
 # convert .html to .docx via powershell script
-convertHMTLToDocxPSscript(savehtmlasdocxps, filetype, inputfile, outputfile)
+convertHMTLToDocxPSscript(savehtmlasdocxps, filetype, final_file, outputfile)
 
 # process converted docx
 # runpython(transformxmlpy, resource_dir, "")
