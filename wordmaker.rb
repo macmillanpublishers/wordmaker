@@ -83,6 +83,8 @@ end
 
 # ---------------------- PROCESSES
 
+puts "----------NEW RUN-----------"
+
 # create the folder for doing everything
 makeDir(final_dir)
 
