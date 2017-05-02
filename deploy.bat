@@ -1,0 +1,1 @@
+C:\Ruby200\bin\ruby.exe S:\resources\bookmaker_scripts\wordmaker\wordmaker.rb '%1'
