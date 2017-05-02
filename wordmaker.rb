@@ -96,4 +96,4 @@ localRunNode(htmlconversionsjs, final_file, os, resource_dir)
 convertHMTLToDocxPSscript(savehtmlasdocxps, filetype, final_file, outputfile)
 
 # unzip converted docx
-runpython(transformxmlpy, resource_dir, os, "#{outputfile} #{final_dir}")
+runpython(transformxmlpy, resource_dir, os, "'#{outputfile}' '#{final_dir}'")
