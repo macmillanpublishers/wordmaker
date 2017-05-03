@@ -16,6 +16,7 @@ worddir = File.join(final_dir, "word")
 documentxml = File.join(worddir, "document.xml")
 os = "windows"
 resource_dir = "C:"
+newzipdir = File.join(final_dir, "newzip")
 htmlconversionsjs = File.join(scriptsdir, "HTMLconversions.js")
 savehtmlasdocxps = File.join(scriptsdir, "saveHTMLasDOCX.ps1")
 unzipdocxpy = File.join(scriptsdir, "unzipDOCX.py")
@@ -98,11 +99,14 @@ localRunNode(htmlconversionsjs, final_file, os, resource_dir)
 # convert .html to .docx via powershell script
 convertHMTLToDocxPSscript(savehtmlasdocxps, filetype, final_file, outputfile)
 
+# create the folder for doing everything
+makeDir(newzipdir)
+
 # unzip converted docx
-#runpython(unzipdocxpy, resource_dir, os, "'#{outputfile}' '#{final_dir}'")
+#runpython(unzipdocxpy, resource_dir, os, "'#{outputfile}' '#{newzipdir}'")
 
 # rename styles in document.xml
-#runpython(renamestylespy, resource_dir, os, "'#{documentxml}' '#{final_dir}'")
+#runpython(renamestylespy, resource_dir, os, "'#{documentxml}' '#{newzipdir}'")
 
 # copy styles file into new zip
 #File.copy("styles.xml", worddir)
