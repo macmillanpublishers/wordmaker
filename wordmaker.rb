@@ -94,6 +94,7 @@ makeDir(final_dir)
 moveFile(inputfile, final_dir)
 
 # prep the html file for conversion
+puts final_file
 localRunNode(htmlconversionsjs, final_file, os, resource_dir)
 
 # convert .html to .docx via powershell script
