@@ -59,7 +59,8 @@ def localRunNode(jsfile, args, os, resource_dir)
   elsif os == "windows"
     nodepath = File.join(resource_dir, "nodejs", "node.exe")
     puts "running node"
-    `#{nodepath} #{jsfile} #{args}`
+    nodecmd = `#{nodepath} #{jsfile} #{args}`
+    puts nodecmd
   else
     puts "Can't run node!"
   end
