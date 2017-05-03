@@ -1,6 +1,9 @@
 from sys import argv
 
 filename = argv[1]
+finaldir = argv[2]
+print filename
+print finaldir
 
 import os
 import zipfile
@@ -14,9 +17,9 @@ def convert_footnotes(self):
     # grab and parse each footnote object
     # create new object and remap to required footnote formatting
     # add to footnote.xml file
-    tree = ET.parse('document.xml')
+    tree = ET.parse(self)
     root = tree.getroot()
 
     return
 
-convert_manuscript( filename )
+convert_footnotes( filename )

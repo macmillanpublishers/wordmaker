@@ -104,3 +104,5 @@ Footnotes and endnotes must also be list in the [Content_Types].xml file, like s
 ```
 
 These can be inserted anywhere within the `<Types>` parent element.
+
+git@github.com:macmillanpublishers/wordmaker.git

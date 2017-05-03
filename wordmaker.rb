@@ -12,11 +12,14 @@ final_file = File.join(final_dir, filename_split)
 filetype = inputfile.split(".").pop
 outputfile = File.join(final_dir, "output.docx")
 scriptsdir = File.join("S:", "resources", "bookmaker_scripts", "wordmaker")
+worddir = File.join(final_dir, "word")
+documentxml = File.join(worddir, "document.xml")
 os = "windows"
 resource_dir = "C:"
 htmlconversionsjs = File.join(scriptsdir, "HTMLconversions.js")
 savehtmlasdocxps = File.join(scriptsdir, "saveHTMLasDOCX.ps1")
-transformxmlpy = File.join(scriptsdir, "unzipDOCX.py")
+unzipdocxpy = File.join(scriptsdir, "unzipDOCX.py")
+renamestylespy = File.join(scriptsdir, "renameStyles.py")
 
 # ---------------------- METHODS
 
@@ -96,4 +99,10 @@ localRunNode(htmlconversionsjs, final_file, os, resource_dir)
 convertHMTLToDocxPSscript(savehtmlasdocxps, filetype, final_file, outputfile)
 
 # unzip converted docx
-runpython(transformxmlpy, resource_dir, os, "'#{outputfile}' '#{final_dir}'")
+#runpython(unzipdocxpy, resource_dir, os, "'#{outputfile}' '#{final_dir}'")
+
+# rename styles in document.xml
+#runpython(renamestylespy, resource_dir, os, "'#{documentxml}' '#{final_dir}'")
+
+# copy styles file into new zip
+#File.copy("styles.xml", worddir)

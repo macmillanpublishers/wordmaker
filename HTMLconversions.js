@@ -12,10 +12,9 @@ fs.readFile(file, function editContent (err, contents) {
 
 // convert footnote spans to paragraphs
   $("div.footnote span.FootnoteText").each(function () {
-    var myAttr = $(this).attr();
     var myHtml = $(this).html();
     $(this).replaceWith(function(){
-        return $("<p/>").html(myHtml).attr(myAttr);
+        return $("<p/>").html(myHtml).addClass("FootnoteText");
     });
   });
 
