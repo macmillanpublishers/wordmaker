@@ -58,6 +58,7 @@ def localRunNode(jsfile, args, os, resource_dir)
     `node #{jsfile} #{args}`
   elsif os == "windows"
     nodepath = File.join(resource_dir, "nodejs", "node.exe")
+    puts "running node"
     `#{nodepath} #{jsfile} #{args}`
   else
     puts "Can't run node!"
@@ -104,7 +105,7 @@ convertHMTLToDocxPSscript(savehtmlasdocxps, filetype, final_file, outputfile)
 makeDir(newzipdir)
 
 # unzip converted docx
-#runpython(unzipdocxpy, resource_dir, os, "'#{outputfile}' '#{newzipdir}'")
+runpython(unzipdocxpy, resource_dir, os, "#{outputfile} #{newzipdir}")
 
 # rename styles in document.xml
 #runpython(renamestylespy, resource_dir, os, "'#{documentxml}' '#{newzipdir}'")
