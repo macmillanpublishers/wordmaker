@@ -62,41 +62,57 @@ def convert_footnotes(self):
       prevdivid = ''
 
       # get the divid of the previous sibling
-      prevdiv = myparent.getprevious().find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}divId")
-
       if footnotesholder.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}footnote") is not None:
-        print "YES"
         prevdivid = footnotesholder.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}footnote[last()]").find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}divId").attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val']
-        #print prevdivstring
-        #prevdivid = prevdiv.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val']
-      else:
-        print "Nope"
 
-      print divid
-      print prevdivid
+      # print divid
+      # print prevdivid
       
       if divid == prevdivid:
         footnotesholder.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}footnote[last()]").append(myparent)
-
         print "CONTINUE"
       else:
         newfootnote = etree.Element(w + "footnote", nsmap=NSMAP)
         newfootnote.append(myparent)
         footnotesholder.append(newfootnote)
-
         print "NEW"
 
       # parentstring = etree.tostring(myparent)
       # print parentstring
-
-      footnotestring = etree.tostring(footnotesholder)
-      print footnotestring
 
       # if div id matches prev, add to prev footnote object
       # else wrap in a new footnote parent
       # add new parent to larger footnote block
 
       footnotecounter += 1
+
+    for footnote in footnotesholder.findall(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}footnote") :
+      # create the footnote reference child
+      refrun = etree.Element(w + "r", nsmap=NSMAP)
+      refpr = etree.Element(w + "rPr", nsmap=NSMAP)
+      refstyle = etree.Element(w + "rStyle", nsmap=NSMAP)
+      ref = etree.Element(w + "footnoteRef", nsmap=NSMAP)
+
+      refstyle.attrib['{http://schemas.microsoft.com/office/word/2010/wordml}val'] = 'FootnoteReference'
+      refpr.append(refstyle)
+      refrun.append(refpr)
+      refrun.append(ref)
+
+      # add the footnoteref child to the footnote as the first r element
+      firstpara = footnote.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p")
+      firstpara.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}r").addprevious(refrun)
+
+    for para in footnotesholder.findall(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p") :
+      if para.getnext() is not None:
+        if para.getprevious() is not None:
+          rsidRPr = para.getprevious().attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidRPr']
+        else:
+          rsidRPr = generate_rsid(footnotecounter)
+        para.attrib['{http://schemas.microsoft.com/office/word/2010/wordml}rsidRPr'] = rsidRPr
+        para.attrib['{http://schemas.microsoft.com/office/word/2010/wordml}rsidP'] = rsidRPr
+
+    footnotestring = etree.tostring(footnotesholder)
+    print footnotestring
 
     return
 
