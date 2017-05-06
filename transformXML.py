@@ -201,4 +201,14 @@ def convert_footnotes(self):
 
     return
 
+def convert_footnoterefs(self):
+    # parse the incoming XML
+    tree = etree.parse(self)
+    root = tree.getroot()
+    #<w:r w:rsidR="009A405C" w:rsidRPr="009A405C"><w:rPr><w:rStyle w:val="spansuperscriptcharacterssup"/></w:rPr><w:footnoteReference w:id="1"/></w:r>
+    #<w:r><w:rPr><w:rStyle w:val="footnoteref"/></w:rPr><w:t>1</w:t></w:r>
+    
+    return
+
 convert_footnotes( filename )
+convert_footnoterefs( filename )
