@@ -13,8 +13,6 @@ import uuid
 
 import xml.etree.ElementTree as ET
 
-ns = {'w' : 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
-
 def generate_textid(counter):
     idbase = uuid.uuid4().hex
     idshort = idbase[:8]
@@ -88,10 +86,6 @@ def convert_footnotes(self):
       # generate the required ids and add them
       paraid = generate_textid(footnoteparacounter)
       rsid = generate_rsid(footnoteparacounter)
-      #myparent.attrib['{http://schemas.microsoft.com/office/word/2010/wordml}paraId'] = paraid
-      #myparent.attrib['{http://schemas.microsoft.com/office/word/2010/wordml}textId'] = '77777777'
-      #myparent.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidR'] = rsid
-      #myparent.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidRDefault'] = rsid
 
       # check to see if it's part of a multi-para note
       divid = para.getparent().find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}divId").attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val']
@@ -119,14 +113,14 @@ def convert_footnotes(self):
     # Add footnoteref element to first para of each footnote
     for footnote in footnotes.findall(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}footnote") :
       # add the footnote id
-      footnote.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val'] = str(footnotecounter)
+      footnote.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}id'] = str(footnotecounter)
 
       # create the footnote reference child via the Element method
       refrun = etree.Element(w + "r", nsmap=NSMAP)
       refpr = etree.Element(w + "rPr", nsmap=NSMAP)
       refstyle = etree.Element(w + "rStyle", nsmap=NSMAP)
       ref = etree.Element(w + "footnoteRef", nsmap=NSMAP)
-      refstyle.attrib['{http://schemas.microsoft.com/office/word/2010/wordml}val'] = 'FootnoteReference'
+      refstyle.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val'] = 'FootnoteReference'
       refpr.append(refstyle)
       refrun.append(refpr)
       refrun.append(ref)
@@ -145,8 +139,10 @@ def convert_footnotes(self):
           rsidRPr = para.getprevious().attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidRPr']
         else:
           rsidRPr = generate_rsid(footnoteparacounter)
-        #para.attrib['{http://schemas.microsoft.com/office/word/2010/wordml}rsidRPr'] = rsidRPr
-        #para.attrib['{http://schemas.microsoft.com/office/word/2010/wordml}rsidP'] = rsidRPr
+
+      # delete the extraneous ind elements
+      ind = para.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ind")
+      ind.getparent().remove(ind)
 
     # remove extraneous divid elements
     for divid in footnotes.findall(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}divId") :
@@ -187,10 +183,6 @@ def convert_footnotes(self):
     rsid = generate_rsid(footnoteparacounter)
     firstnote.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}type'] = 'separator'
     firstnote.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}id'] = '-1'
-    #firstnote.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p").attrib['{http://schemas.microsoft.com/office/word/2010/wordml}paraId'] = paraid
-    #firstnote.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p").attrib['{http://schemas.microsoft.com/office/word/2010/wordml}textId'] = '77777777'
-    #firstnote.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p").attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidR'] = rsid
-    #firstnote.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p").attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidRDefault'] = rsid
     firstnote.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}spacing").attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}line'] = '240'
     firstnote.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}spacing").attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}lineRule'] = 'auto'
 
@@ -198,10 +190,6 @@ def convert_footnotes(self):
     rsid = generate_rsid(footnoteparacounter)
     secondnote.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}type'] = 'continuationSeparator'
     secondnote.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}id'] = '0'
-    #secondnote.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p").attrib['{http://schemas.microsoft.com/office/word/2010/wordml}paraId'] = paraid
-    #secondnote.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p").attrib['{http://schemas.microsoft.com/office/word/2010/wordml}textId'] = '77777777'
-    #secondnote.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p").attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidR'] = rsid
-    #secondnote.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}p").attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidRDefault'] = rsid
     secondnote.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}spacing").attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}line'] = '240'
     secondnote.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}spacing").attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}lineRule'] = 'auto'
 
@@ -216,20 +204,21 @@ def convert_footnotes(self):
     # fix footnote refs
     footnoteparacounter = 1
 
+    # transform the existing refs to required format
     for span in root.findall(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rStyle[@{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val='footnoteref']") :
       myparent = span.getparent().getparent()
       mytext = myparent.findtext(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
       textel = myparent.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
       rsidR = generate_rsid(footnoteparacounter)
-      #myparent.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidR'] = rsidR
-      #myparent.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidRPr'] = rsidR
 
       FR = E.footnoteReference
       ref = FR()
 
       ref.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}id'] = mytext
 
+      # insert the new ref elements
       myparent.append(ref)
+      # delete the old text node, which is now an id attribute
       myparent.remove(textel)
 
       style = myparent.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rStyle")
@@ -237,66 +226,11 @@ def convert_footnotes(self):
 
       footnoteparacounter += 1
 
+    # write to a new document
     docfile = open('document2.xml', 'w')
     docfile.write(etree.tostring(root, encoding="UTF-8", standalone=True, xml_declaration=True))
     docfile.close()
 
     return
 
-# def convert_footnoterefs(self):
-#     footnotecounter = 1
-#     # namespace declarations for the element method we'll use later
-#     WORD_NAMESPACE = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
-#     w = "{%s}" % WORD_NAMESPACE
-
-#     WORD14_NAMESPACE = "http://schemas.microsoft.com/office/word/2010/wordml"
-#     w14 = "{%s}" % WORD_NAMESPACE
-
-#     NSMAP = {None : WORD_NAMESPACE}
-
-#     # parse the incoming XML
-#     tree = etree.parse(self)
-#     root = tree.getroot()
-    
-#     # namespace declaration for the builder method.
-#     E = ElementMaker(namespace="http://schemas.openxmlformats.org/wordprocessingml/2006/main",
-#                      nsmap={'w' : "http://schemas.openxmlformats.org/wordprocessingml/2006/main"})
-    
-#     # parse the incoming XML
-#     tree = etree.parse(self)
-#     root = tree.getroot()
-#     #<w:r w:rsidR="009A405C" w:rsidRPr="009A405C"><w:rPr><w:rStyle w:val="spansuperscriptcharacterssup"/></w:rPr><w:footnoteReference w:id="1"/></w:r>
-#     #<w:r w:rsidR="00ef5819" w:rsidRPr="00ef5819"><w:rPr><w:rStyle w:val="spansuperscriptcharacterssup"/></w:rPr><w:footnoteReference w:id="19"/></w:r>
-#     #<w:r><w:rPr><w:rStyle w:val="footnoteref"/></w:rPr><w:t>1</w:t></w:r>
-
-#     for span in root.findall(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rStyle[@{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val='footnoteref']") :
-#       myparent = span.getparent().getparent()
-#       mytext = myparent.findtext(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
-#       textel = myparent.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t")
-#       rsidR = generate_rsid(footnotecounter)
-#       myparent.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidR'] = rsidR
-#       myparent.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rsidRPr'] = rsidR
-
-#       FR = E.footnoteReference
-#       ref = FR()
-
-#       ref.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}id'] = mytext
-
-#       myparent.append(ref)
-#       myparent.remove(textel)
-
-#       style = myparent.find(".//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rStyle")
-#       style.attrib['{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val'] = 'spansuperscriptcharacterssup'
-
-#       print(etree.tostring(myparent))
-
-#       footnotecounter += 1
-
-#     newfile = open('document2.xml', 'w')
-#     newfile.write(etree.tostring(root, encoding="utf-8", standalone=True, xml_declaration=True))
-#     newfile.close()
-
-#     return
-
 convert_footnotes( filename )
-#convert_footnoterefs( filename )
