@@ -18,6 +18,9 @@ fs.readFile(file, function editContent (err, contents) {
     });
   });
 
+// delete any empty spans
+  $("span:empty").remove();
+
   var output = $.html();
     fs.writeFile(file, output, function(err) {
       if(err) {
